@@ -17,8 +17,9 @@ try:
 except ValueError as e:
 	print(f"エラー: {e}")
 	exit()
+print("\n")
 
-#物件情報が保存される配列 (駅名, 駅徒歩)
+# 物件情報が保存される配列 (駅名, 駅徒歩)
 try:
 	property_info = get_address.get_address(base_url)
 except Exception as e:
@@ -34,7 +35,7 @@ for i in range(len(property_info[0])):
 	station = property_info[1][i]   #最寄り駅
 	walk_time = property_info[2][i] #駅までの徒歩時間
 
-	print(f'# {point_x} (最寄り駅: {station}から徒歩{walk_time}分) までの経路情報 ↓')
+	print(f'\033[92m\033[1m# {point_x} (最寄り駅: {station}から徒歩{walk_time}分) までの経路情報 ↓\033[0m')
 	for address in config.addresses:
 		try:
 			info = google_map.get_route_info(address[1], station)
