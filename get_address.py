@@ -45,7 +45,8 @@ for page in range(1, max_page+1):
 					base_data = {}
 
 					# ベースの情報
-					base_data["名称"] = item.find("div", {"class": "cassetteitem_content-title"}).getText().strip()
+					property_name = item.find("div", {"class": "cassetteitem_content-title"}).getText().strip()
+					base_data["名称"] = property_name.replace('　', ' ')
 					base_data["アドレス"] = item.find("li", {"class": "cassetteitem_detail-col1"}).getText().strip()
 					base_data["アクセス"] = station.getText().strip()
 					# base_data["カテゴリー"] = item.find("div", {"class": "cassetteitem_content-label"}).getText().strip()
@@ -89,31 +90,30 @@ walk_times = []
 
 # CSVファイルを開いてデータを読み込む
 with open("property_information.csv", mode='r', newline='', encoding='utf-8') as file:
-    reader = csv.reader(file)
+	reader = csv.reader(file)
 
-    # ヘッダー行をスキップ
-    next(reader)
+	# ヘッダー行をスキップ
+	next(reader)
 
-    # 各行に対して処理を行う
-    for row in reader:
-        name = row[1].replace('　', ' ')
-        names.append(name)     # 名称
-        addresses.append(row[2]) # アドレス
-        accesses.append(row[3])  # アクセス
-        floors.append(row[4])    # 階数
-        rents.append(row[5])     # 家賃
-        urls.append(row[6])      # URL
+	# 各行に対して処理を行う
+	for row in reader:
+		names.append(row[1])     # 名称
+		addresses.append(row[2]) # アドレス
+		accesses.append(row[3])  # アクセス
+		floors.append(row[4])    # 階数
+		rents.append(row[5])     # 家賃
+		urls.append(row[6])      # URL
 
 # 最寄り駅と最寄りまでの歩行時間の結果を格納するための配列
 for text in accesses:
-    # "駅"までの文字列を取得
-    station_name = text.split("駅")[0] + "駅"
-    stations.append(station_name)
+	# "駅"までの文字列を取得
+	station_name = text.split("駅")[0] + "駅"
+	stations.append(station_name)
 
-    # "歩"と"分"の間の整数を抽出
-    walk_minutes = re.search(r'歩(\d+)分', text)
-    walk_minutes = int(walk_minutes.group(1)) if walk_minutes else None
-    walk_times.append(walk_minutes)
+	# "歩"と"分"の間の整数を抽出
+	walk_minutes = re.search(r'歩(\d+)分', text)
+	walk_minutes = int(walk_minutes.group(1)) if walk_minutes else None
+	walk_times.append(walk_minutes)
 
 # 結果を表示（テスト用）
 print("名称:", names)
