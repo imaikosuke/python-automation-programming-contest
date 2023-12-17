@@ -77,38 +77,50 @@ df = pd.DataFrame(all_data)
 # CSVとして出力
 df.to_csv("property_information.csv")
 
-# CSVファイルを開く
-with open('property_information.csv', mode='r', newline='', encoding='utf-8') as file:
+# 各列の値を格納するための配列
+names = []
+addresses = []
+accesses = []
+floors = []
+rents = []
+urls = []
+stations = []
+walk_times = []
+
+# CSVファイルを開いてデータを読み込む
+with open("property_information.csv", mode='r', newline='', encoding='utf-8') as file:
     reader = csv.reader(file)
-    
-    # ヘッダーを読み込む（カラム名を取得）
-    headers = next(reader)
-    
-    # 'アクセス'列のインデックスを取得
-    access_index = headers.index('アクセス')
 
-    # アクセス情報を保持するリスト
-    access_info = []
+    # ヘッダー行をスキップ
+    next(reader)
 
-    # データを一行ずつ読み込む
+    # 各行に対して処理を行う
     for row in reader:
-        # アクセス列のデータを取得し、リストに追加
-        access_info.append(row[access_index])
+        name = row[1].replace('　', ' ')
+        names.append(name)     # 名称
+        addresses.append(row[2]) # アドレス
+        accesses.append(row[3])  # アクセス
+        floors.append(row[4])    # 階数
+        rents.append(row[5])     # 家賃
+        urls.append(row[6])      # URL
 
 # 最寄り駅と最寄りまでの歩行時間の結果を格納するための配列
-extracted_info = []
-
-for text in access_info:
+for text in accesses:
     # "駅"までの文字列を取得
     station_name = text.split("駅")[0] + "駅"
+    stations.append(station_name)
 
     # "歩"と"分"の間の整数を抽出
     walk_minutes = re.search(r'歩(\d+)分', text)
     walk_minutes = int(walk_minutes.group(1)) if walk_minutes else None
+    walk_times.append(walk_minutes)
 
-    # 結果を配列に追加
-    extracted_info.append((station_name, walk_minutes))
-
-# 結果を表示
-for station, minutes in extracted_info:
-    print(f"駅名: {station}, 最寄りまでの歩行時間（分）: {minutes}")
+# 結果を表示（テスト用）
+print("名称:", names)
+print("アドレス:", addresses)
+print("アクセス:", accesses)
+print("階数:", floors)
+print("家賃:", rents)
+print("URL:", urls)
+print("stations:", stations)
+print("walk_times:", walk_times)
